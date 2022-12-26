@@ -1,0 +1,30 @@
+version: "3.9"
+services:
+
+  python:
+    build:
+      context: .
+      dockerfile: ./docker/python/Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/code
+    links:
+      - mysql
+
+  nginx:
+    build: ./docker/nginx
+    ports:
+      - "80:80"
+    links:
+      - python
+    volumes:
+      - .:/code
+    depends_on:
+      - python
+    restart: always
+
+  mysql:
+    build: ./docker/mysql
+    ports:
+      - "13306:3306"
